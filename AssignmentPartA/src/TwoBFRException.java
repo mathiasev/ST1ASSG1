@@ -15,8 +15,10 @@ public class TwoBFRException extends Exception {
 						+ "Order 2: %s for %s on %s",
 						order1.getsLaunchID(),
 						order1.getsClientName(),
+						order1.getsDate(),
 						order2.getsLaunchID(),
-						order2.getsClientName()
+						order2.getsClientName(),
+						order2.getsDate()
 						),
 				"TWO BFRs ON SAME DAY",
 				JOptionPane.ERROR_MESSAGE

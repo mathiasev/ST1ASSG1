@@ -39,6 +39,7 @@ public class PartB extends JFrame {
 
 	public PartB() {
 		setTitle("Part B");
+		setSize(800, 400);
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 

@@ -20,19 +20,24 @@ public class ActionPlan {
 		
 		// Break all orders into days
 		tempDay.add(Orders.get(0));
+		//System.out.println("# orders: " + Orders.size());
 		for (int i = 1; i < Orders.size(); i++) {
 			if (Orders.get(i).getDate().equals(Orders.get(i-1).getDate())) {
 				tempDay.add(Orders.get(i));
+				
+				//If same day, remember that first element has been added
+				if(i == Orders.size()-1) Days.add(tempDay);
 			} else {
+				tempDay.add(Orders.get(i));		
 				Days.add(tempDay);
 				tempDay = new ArrayList<Order>();
-				tempDay.add(Orders.get(i));
 			}
 		}
 
 		// Loop through each day
 		for (List<Order> day : Days) {
-			System.out.println(day.get(0).getsDate());
+			System.out.println("In Days loop " + day.get(0).getsDate());
+			System.out.println("Day size: " + day.size());
 			try {
 				// If more than one two launches show error
 				if (day.size() > 2) {
@@ -42,7 +47,7 @@ public class ActionPlan {
 
 				// Otherwise loop through each
 				else {
-
+					System.out.println("Number of launches: " + day.size());
 					// Check if more than one launch
 					if (day.size() > 1) {
 
@@ -57,7 +62,7 @@ public class ActionPlan {
 						// If first is a BFR, then use KSC pad
 						// and add second to LC40
 						else if (day.get(0).getService().getsLaunchVehicle().equalsIgnoreCase("BFR")) {
-							addLaunch(day.get(0), "KSC", "AM");
+							addLaunch(day.get(0), "KSC",  "AM");
 							addLaunch(day.get(1), "LC40", "PM");
 						}
 
@@ -66,27 +71,30 @@ public class ActionPlan {
 							addLaunch(day.get(0), "LC40", "AM");
 							addLaunch(day.get(1), "KSC", "PM");
 						}
+					
 					}
-
+					
 					// Single launch (use default LC40 pad and morning time)
 					else {
 						addLaunch(day.get(0), "LC40", "AM");
 					}
+					
 				}
 			}
 
 			// Show error message when two BFRs launched on same day
 			catch (TwoBFRException e) {
-				JOptionPane.showMessageDialog(null, "2 BFR on same day");
+				//JOptionPane.showMessageDialog(null, "2 BFR on same day");
+				//e.printStackTrace();
 			}
 
 			// Show error message when more than two launches on a day
 			catch (MoreThan2Exception e) {
-				JOptionPane.showMessageDialog(null, "2 BFR on same day");
+				//JOptionPane.showMessageDialog(null, "2 BFR on same day");
+				//e.printStackTrace();
 			}
 
 			// End of day
-			System.out.println("\n\n");
 		}
 	}
 
