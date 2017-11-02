@@ -2,8 +2,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.JOptionPane;
-
 public class Order {
 
 	private Date date;
@@ -83,14 +81,8 @@ public class Order {
 		return date;
 	}
 
-	public void setsDate(String sDate) {
-		try {
+	public void setsDate(String sDate) throws ParseException {
 			this.date = inputDate.parse(sDate);
-		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(null, "Failed to convert date", "Failed to convert date",
-					JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
 	}
 
 	public double getdValue() {

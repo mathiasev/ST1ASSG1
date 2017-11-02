@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,9 +93,12 @@ public class PartB extends JFrame {
 	}
 
 	private void createActionPlan(File selectedFile) {
-		actionPlan = new ActionPlan(readOrderFile(selectedFile));
-		actionPlan.generateActionPlan();
-		jTextArea_Output.setText(actionPlan.actionPlanString());
+		List<Order> Orders = readOrderFile(selectedFile);
+		if (Orders != null) {
+			actionPlan = new ActionPlan(readOrderFile(selectedFile));
+			actionPlan.generateActionPlan();
+			jTextArea_Output.setText(actionPlan.actionPlanString());
+		}
 	}
 
 	private void createActionPlan(File selectedFile, File saveFile) {
@@ -103,27 +107,37 @@ public class PartB extends JFrame {
 			saveFile = new File(saveFile + ".txt");
 		}
 
-		actionPlan = new ActionPlan(readOrderFile(selectedFile));
-		actionPlan.generateActionPlan();
-		if (bValidFile) {
-			jTextArea_Output.setText(actionPlan.actionPlanString());
+		List<Order> Orders = readOrderFile(selectedFile);
+		if (Orders != null) {
+			actionPlan = new ActionPlan(readOrderFile(selectedFile));
+			actionPlan.generateActionPlan();
+			if (bValidFile) {
+				jTextArea_Output.setText(actionPlan.actionPlanString());
+				if (actionPlan.actionPlanString() != null) {
+					try {
+						BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
 
-			try {
-				BufferedWriter bw = new BufferedWriter(new FileWriter(saveFile));
+						// Split new line to writer new lines
+						for (String ln : actionPlan.actionPlanString().split("\n")) {
+							bw.write(ln);
+							bw.newLine();
+						}
 
-				// Split new line to writer new lines
-				for (String ln : actionPlan.actionPlanString().split("\n")) {
-					bw.write(ln);
-					bw.newLine();
+						bw.close();
+						JOptionPane.showMessageDialog(rootPane, "Action Plan saved to file.", "Success",
+								JOptionPane.INFORMATION_MESSAGE);
+					} catch (IOException e) {
+						JOptionPane.showMessageDialog(rootPane, "Error saving file.", "Error", JOptionPane.ERROR);
+						
+					}
+				} else {
+					JOptionPane.showMessageDialog(rootPane, "File not saved.", "File not saved",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
-
-				bw.close();
-				JOptionPane.showMessageDialog(rootPane, "Action Plan saved to file.", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(rootPane, "Error saving file.", "Error", JOptionPane.ERROR);
-				e.printStackTrace();
 			}
+		} else {
+			JOptionPane.showMessageDialog(rootPane, "File not saved.", "File not saved",
+					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 
@@ -131,19 +145,19 @@ public class PartB extends JFrame {
 		orderPlan = new OrderPlan();
 		List<Order> Orders = readOrderFile(selectedFile);
 		if (Orders != null) {
-		boolean first = true;
-		for (Order order : Orders) {
-			if (first)
-				orderPlan.setDate(order.getDate());
-			first = false;
-			orderPlan.addNitrogen(order.isbNitrogen() ? 1 : 0);
-			orderPlan.addVehicle(order.getService());
-			if (order.isbInsurance())
-				orderPlan.addInsurance(order.getdValue(), order.getsLaunchID(), order.getsDate());
-			if (order.getsOrbit().equalsIgnoreCase("CSO") || order.getsOrbit().equalsIgnoreCase("GTO"))
-				orderPlan.addNESA(order.getsLaunchID(), order.getsDate());
-			jTextArea_Output.setText(orderPlan.generatePlan());
-		}
+			boolean first = true;
+			for (Order order : Orders) {
+				if (first)
+					orderPlan.setDate(order.getDate());
+				first = false;
+				orderPlan.addNitrogen(order.isbNitrogen() ? 1 : 0);
+				orderPlan.addVehicle(order.getService());
+				if (order.isbInsurance())
+					orderPlan.addInsurance(order.getdValue(), order.getsLaunchID(), order.getsDate());
+				if (order.getsOrbit().equalsIgnoreCase("CSO") || order.getsOrbit().equalsIgnoreCase("GTO"))
+					orderPlan.addNESA(order.getsLaunchID(), order.getsDate());
+				jTextArea_Output.setText(orderPlan.generatePlan());
+			}
 		}
 	}
 
@@ -151,34 +165,43 @@ public class PartB extends JFrame {
 		List<Order> tempOrders = new ArrayList<Order>();
 		try {
 			// https://stackoverflow.com/a/21974043
-			//System.out.println(selectedFile.getName().substring(selectedFile.getName().lastIndexOf(".") + 1));
+			// System.out.println(selectedFile.getName().substring(selectedFile.getName().lastIndexOf(".")
+			// + 1));
 			if (selectedFile.getName().substring(selectedFile.getName().lastIndexOf(".") + 1).equalsIgnoreCase("txt")) {
 				BufferedReader br = new BufferedReader(new FileReader(selectedFile));
 
 				String sLine;
 				while ((sLine = br.readLine()) != null) {
-					String[] sLineArr = sLine.split(",");
-					Order tempOrder = new Order();
-					tempOrder.setsDate(sLineArr[0].trim());
-					tempOrder.setsClientName(sLineArr[1].trim());
-					tempOrder.setService(Services.getService(sLineArr[2]));
-					tempOrder.setsLaunchID(sLineArr[3]);
-					tempOrder.setsOrbit(sLineArr[4]);
-					tempOrder.setbNitrogen(getBooleanYN(sLineArr[5]));
-					tempOrder.setbInsurance(getBooleanYN(sLineArr[6]));
-					tempOrder.setdValue(getDouble(sLineArr[7]));
-					tempOrder.setsComment((sLineArr.length == 9) ? sLineArr[8] : "");
-					tempOrders.add(tempOrder);
+					try {
+						String[] sLineArr = sLine.split(",");
+						Order tempOrder = new Order();
+						tempOrder.setsDate(sLineArr[0].trim());
+						tempOrder.setsClientName(sLineArr[1].trim());
+						tempOrder.setService(Services.getService(sLineArr[2]));
+						tempOrder.setsLaunchID(sLineArr[3]);
+						tempOrder.setsOrbit(sLineArr[4]);
+						tempOrder.setbNitrogen(getBooleanYN(sLineArr[5]));
+						tempOrder.setbInsurance(getBooleanYN(sLineArr[6]));
+						tempOrder.setdValue(getDouble(sLineArr[7]));
+						tempOrder.setsComment((sLineArr.length == 9) ? sLineArr[8] : "");
+						tempOrders.add(tempOrder);
+						bValidFile = true;
+					} catch (ParseException e) {
+						JOptionPane.showMessageDialog(rootPane, "Failed to read file. Please try again.", "FILE ERROR",
+								JOptionPane.ERROR_MESSAGE);
+						bValidFile = false;
+						break;
+					}
 				}
-				bValidFile= true;
 
 				br.close();
-			} else throw new IOException();
-		} catch (IOException e) {
+			} else
+				throw new IOException();
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(rootPane, "Failed to read file. Please try again.", "FILE ERROR",
 					JOptionPane.ERROR_MESSAGE);
 			bValidFile = false;
-			e.printStackTrace();
+			// e.printStackTrace();
 
 		}
 

@@ -12,6 +12,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -31,8 +32,9 @@ public class PartC extends JFrame {
 	public PartC() {
 
 		setTitle("Part C");
-
-		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		setSize(800, 700);	
+getContentPane().setLayout(null);
+		//getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
 		addActions();
 
@@ -54,6 +56,7 @@ public class PartC extends JFrame {
 		JRadioButton addOption = new JRadioButton("Add");
 		addOption.setActionCommand(addOption.getText());
 		buttonGroup_Options.add(addOption);
+		
 		jPanelButtons.add(addOption);
 
 		JRadioButton subtractOption = new JRadioButton("Subtract");
@@ -66,25 +69,34 @@ public class PartC extends JFrame {
 		buttonGroup_Options.add(interleaveOption);
 		jPanelButtons.add(interleaveOption);
 
+		jPanelButtons.setBounds(10,10,100,100);
 		tempList.add(jPanelButtons);
 
 		String[] option1Labels = { "10", "20", "30", "50", "100", "200", "300", "500", "BRAD" };
 		jOptions1 = new JList<String>(option1Labels);
 		JScrollPane jScroll = new JScrollPane(jOptions1);
+		
+		jScroll.setBounds(120,10,100,100);
 		tempList.add(jScroll);
 
 		String[] option2Labels = { "10", "20", "30", "50", "100", "200", "300", "500", "JANET" };
 		jCombo = new JComboBox<String>(option2Labels);
+		
+		jCombo.setBounds(120,120,100,50);
 		tempList.add(jCombo);
 
 		JButton button = new JButton("Do it!");
 		button.addActionListener(actionListener_Button);
+		
+		button.setBounds(240,10,100,50);
 		tempList.add(button);
 
 		jText_out = new JTextArea();
 		jText_out.setEditable(false);
 		jText_out.setRows(5);
 		JScrollPane output = new JScrollPane(jText_out);
+		
+		output.setBounds(380,10,200,200);
 		tempList.add(output);
 
 		return tempList;

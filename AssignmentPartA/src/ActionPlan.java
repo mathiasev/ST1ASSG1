@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 public class ActionPlan {
 
 	private List<Order> Orders;
@@ -22,32 +20,40 @@ public class ActionPlan {
 		tempDay.add(Orders.get(0));
 		//System.out.println("# orders: " + Orders.size());
 		for (int i = 1; i < Orders.size(); i++) {
+			//If they are the same day, add to current day
 			if (Orders.get(i).getDate().equals(Orders.get(i-1).getDate())) {
 				tempDay.add(Orders.get(i));
 				
 				//If same day, remember that first element has been added
 				if(i == Orders.size()-1) Days.add(tempDay);
-			} else {
-				tempDay.add(Orders.get(i));		
+			}
+			
+			//Add usual order and create a new day
+			else {
 				Days.add(tempDay);
 				tempDay = new ArrayList<Order>();
+				tempDay.add(Orders.get(i));		
+				//Add the last day if on a new day
+				//System.out.println("i = " + i);
+				
+				if (i == Orders.size()-1) Days.add(tempDay);
 			}
 		}
 
 		// Loop through each day
 		for (List<Order> day : Days) {
-			System.out.println("In Days loop " + day.get(0).getsDate());
-			System.out.println("Day size: " + day.size());
+			//System.out.println("In Days loop " + day.get(0).getsDate());
+			//System.out.println("Day size: " + day.size());
 			try {
 				// If more than one two launches show error
 				if (day.size() > 2) {
-					JOptionPane.showMessageDialog(null, "More than 2");
-					throw new MoreThan2Exception();
+					//JOptionPane.showMessageDialog(null, "More than 2");
+					throw new MoreThan2Exception(day.get(0).getsDate());
 				}
 
 				// Otherwise loop through each
 				else {
-					System.out.println("Number of launches: " + day.size());
+					//System.out.println("Number of launches: " + day.size());
 					// Check if more than one launch
 					if (day.size() > 1) {
 
@@ -100,7 +106,7 @@ public class ActionPlan {
 
 	private void addLaunch(Order order, String sLaunchPad, String sTime) {
 		String[] times = sTime.equalsIgnoreCase("AM") ? AM_TIMES : PM_TIMES;
-
+System.out.println("Using " + times.toString() + " for " + sTime + " times");
 		lines.add(String.format("%s %s	Start vehicle rollout of %s on pad %s for %s", order.getsDate(), times[0],
 				order.getService().getsLaunchVehicle(), sLaunchPad, order.getsLaunchID()));
 

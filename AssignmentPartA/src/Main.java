@@ -16,13 +16,13 @@ public class Main {
 		//partA.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//partA.setVisible(true);
 		
-		PartB partB = new PartB();
-		partB.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		partB.setVisible(true);
+		//PartB partB = new PartB();
+		//partB.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//partB.setVisible(true);
 		
-		//PartC partC = new PartC();
-		//partC.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//partC.setVisible(true);
+		PartC partC = new PartC();
+		partC.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		partC.setVisible(true);
 	}
 
 }
