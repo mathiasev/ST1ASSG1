@@ -12,7 +12,6 @@ import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -113,9 +112,9 @@ getContentPane().setLayout(null);
 						try {
 							int num1 = Integer.parseInt(jOptions1.getSelectedValue());
 							int num2 = Integer.parseInt((String) jCombo.getSelectedItem());
-							jText_out.setText(String.format("%d + %d = %d\n", num1, num2, (num1 + num2)));
+							jText_out.append(String.format("%d + %d = %d\n", num1, num2, (num1 + num2)));
 						} catch (Exception e) {
-							jText_out.setText(String.format("%s + %s = %s\n", jOptions1.getSelectedValue(),
+							jText_out.append(String.format("%s + %s = %s\n", jOptions1.getSelectedValue(),
 									(String) jCombo.getSelectedItem(),
 									jOptions1.getSelectedValue() + (String) jCombo.getSelectedItem()));
 						}
@@ -125,7 +124,7 @@ getContentPane().setLayout(null);
 						try {
 							int num1 = Integer.parseInt(jOptions1.getSelectedValue());
 							int num2 = Integer.parseInt((String) jCombo.getSelectedItem());
-							jText_out.setText(String.format("%d - %d = %d\n", num2, num1, (num2 - num1)));
+							jText_out.append(String.format("%d - %d = %d\n", num2, num1, (num2 - num1)));
 						} catch (Exception e) {
 							jText_out.append(String.format("Cannot subtract %s from %s\n",
 									(String) jCombo.getSelectedItem(), jOptions1.getSelectedValue()));
